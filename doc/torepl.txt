@@ -134,8 +134,8 @@ ToRepl Command Config                                    *ToRepl-command-config*
         How to pass the script to the REPL.
         
         This can be one of:
-        - `"torepl.PassMethod.arg"` or `"arg"` (Default).
-        - `"torepl.PassMethod.file"` or `"file"`. If this is used the file name
+        - `torepl.PassMethod.arg` or `"arg"` (Default).
+        - `torepl.PassMethod.file` or `"file"`. If this is used the file name
           is passed and the REPL needs to handle the deletion. This is because
           the call is async and NVim would delete the file immediately after the
           terminal is opened, not giving the called REPL enough time to run or
