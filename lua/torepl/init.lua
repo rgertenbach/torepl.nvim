@@ -61,7 +61,7 @@ function M.extract_setup(delim, up_to)
   return lines
 end
 
---- Gets the config for the current buffer or nil if none is set up.
+--- Gets the first matching config for the current buffer or nil.
 ---
 ---@return CmdConfig | nil # A CmdConfig if one matches, otherwise `nil`.
 function M.get_buffer_config()

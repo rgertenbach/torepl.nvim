@@ -1,0 +1,144 @@
+================================================================================
+INTRODUCTION                                                       *torepl.nvim*
+
+ToRepl is a small plugin that is built to support running scripts you are
+editing.
+
+In the most basic case you can just `set makeprg` if all you care about is the
+output. This plugin is intended to be used with programs that leave you in a
+repl by running the code in a new terminal tab.
+
+It also supports "setups" which is a code segment that, if you run a selection,
+is executed before the selection is run. This useful if you have libraries to
+load or do any other sort of preprocessing.
+
+torepl.setup({opts})                                            *torepl.setup()*
+    Setup function run by the user. The plugin will do nothing if you don't
+    explicitly set it up. You can configure how and to what your code is passed.
+
+    Usage:
+    >
+    local torepl = require("torepl.nvim")
+    torepl.setup({
+      commands = {
+        -- Run command as in python
+        ["python"] = { cmd = "python3 -ic \"%s\"" },
+        -- If the csv is a *_foo.csv open it with a python script that uses
+        -- Pandas, otherwise cut the third field.
+        ["csv"] = {
+          { 
+            pattern = ".*_foo.csv",
+            cmd = "python3 pandas_wrapper.py %s",
+            pass_as = torepl.PassMethod.file
+          },
+          {  cmd = "cut -d, -f3 %s" }
+        }
+    })
+<
+    For the full format of a command config see |torepl-config|.
+
+torepl.execute_buffer()                                *torepl.execute_buffer()*
+    Executes the current buffer if a command matches the filetype and
+    optionally pattern.
+
+    This is also avaible as a Vim command via `:ToReplBuffer`.
+
+torepl.execute_selection()                          *torepl.execute_selection()*
+    Executes the current selection if a command matches the filetype and
+    optionally pattern.
+
+    If a setup delimiter is defined and present in the file and appears before
+    the selection then it is executed first.
+
+    This is also avaible as a Vim command via `:ToReplSelection`.
+
+torepl.get_buffer_config()                          *torepl.get_buffer_config()*
+    Gets the first config that matches the current buffer. If none is found
+    `nil` is returned.
+
+torepl.execute({script}, {config})                            *torepl.execute()*
+    Executes an array in `{script}` according to `{config}`
+
+    Parameters:
+        {script} (table) The script in an array, one string element per line.
+        {config} (table) A |torepl-config| that defines how to run the script.
+
+torepl.extract_setup({delim}, {up_to})                  *torepl.extract_setup()*
+    Extracts the setup code as a string array. One element per line.
+
+    Parameters:
+        {delim} (string) The delimiter separating the setup from the main code.
+        This is typically a comment.
+        {up_to} (integer) Up to which line to scan the buffer for a comment. If
+        none is provided the entire buffer is scanned.
+
+torepl.utils.concat_in_place({t1}, {t2})         *torepl.utils.concat_in_place()*
+    Extends `t1` by adding `t2` at the end, in place.
+    
+    Parameters:
+        {t1} table The table to append to.
+        {t2} table The table to append to `t1`.
+    
+torepl.utils.get_selected_range()            *torepl.utils.get_selected_range()*
+    Returns the currently selected range in a table.
+
+    The format is (everything 0-based):
+    >
+    {
+      first = {row = 0, col = 0}, 
+      last = {row = 1, col = 0}, 
+      mode = "v"
+    }
+<
+    
+    The earlier position in the text comes first, even if the selection is
+    backwards.
+
+ToRepl Config                                                    *ToRepl-config*
+
+    Currently the ToRepl opts only contain a command section.
+
+    The command section is a table that maps |filetype|s to either a sigle 
+    |ToRepl-command-config| or to a list of them. Whichever one matches first
+    will be used, so if you want to treat some types of file differently based
+    on name you want to map the strictest config first and the loosest last.
+
+
+ToRepl Command Config                                    *ToRepl-command-config*
+
+    A CmdConfig contains the following fields:
+
+    cmd: ~
+        The command to be run in the newly opened terminal. The command should
+        include a `%s` wherever the script is passed in as an argument or as a
+        file name.
+
+        Note that because of `EOF` it's difficult to pipe into REPLs with -i
+        flags using stdin as they usually interpret it as a signal to shut down.
+
+    delimiter: ~
+        The delimiter separating the setup that should always be executed from
+        the rest of the code. This should typically be a comment.
+
+        If none is set setup steps are not applied.
+
+    pattern: ~
+        The lua pattern the filename should match. This can be used to e.g.
+        handle test files differently from normal files or treat different
+        "modes" of files differently that are grouped in the same filetype.
+
+        If none is provided any file matching the filetype is executed with this
+        rule unless a previous rule matched it.
+
+    pass_as: ~
+        How to pass the script to the REPL.
+        
+        This can be one of:
+        - `"torepl.PassMethod.arg"` or `"arg"` (Default).
+        - `"torepl.PassMethod.file"` or `"file"`. If this is used the file name
+          is passed and the REPL needs to handle the deletion. This is because
+          the call is async and NVim would delete the file immediately after the
+          terminal is opened, not giving the called REPL enough time to run or
+          consume the script.
+
+vim:tw=80:ts=8:ft=help:norl:

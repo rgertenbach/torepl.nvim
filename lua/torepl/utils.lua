@@ -10,7 +10,7 @@
 
 local M = {}
 
---- Extends `t1` by addin `t2` at the end, in place.
+--- Extends `t1` by adding `t2` at the end, in place.
 ---
 ---@param t1 table The table to append to.
 ---@param t2 table The table to append to `t1`.
@@ -20,6 +20,9 @@ function M.concat_in_place(t1, t2)
 end
 
 --- Returns a table with the selected range in the buffer.
+---
+--- The earlier position in the text comes first, even if the selection is
+--- backwards.
 ---
 ---@return Selection # The currently selected range.
 function M.get_selected_range()
