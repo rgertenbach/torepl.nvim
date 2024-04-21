@@ -141,4 +141,27 @@ ToRepl Command Config                                    *ToRepl-command-config*
           terminal is opened, not giving the called REPL enough time to run or
           consume the script.
 
+    before: ~
+        A snippet of code to run before the script (and setup). This can be
+        useful to set log sinks or the like.
+
+    after: ~
+        A snippet of code to run after the script. This could for example be
+        something like:
+        >
+        [[import IPython
+        IPython.embed()]]
+<
+        This can be useful when while working on code that won't be
+        interactive but you want to be able to explore it now during
+        development.
+        
+        You can also use it to make sure the file with the code / data is
+        deleted, e.g.:
+
+        >
+        [[import sys
+        import os
+        os.remove(sys.argv[1])]]
+<
 vim:tw=80:ts=8:ft=help:norl:

@@ -8,9 +8,14 @@ local utils = require("torepl.utils")
 ---@class CmdConfig
 ---
 ---@field cmd string the command to execute.
----@field delimiter string? The delimiter separating the setup from the main code.
+---@field delimiter string? The delimiter separating the setup from the main
+--- code.
 ---@field pattern string? Which file pattern to apply this to.
----@field pass_as PassMethod? How the script is passed to `cmd`. Defaults to `"arg"`.
+---@field pass_as PassMethod? How the script is passed to `cmd`.
+--- Defaults to `"arg"`.
+---@field before string? Code to run before the script. E.g. setting log sinks.
+---@field after string? Code to run after the script. E.g. to initiate an
+--- interactive shell in Python via `IPython.embed()`.
 
 ---@class ToReplConfig
 ---@field commands table<CmdConfig | CmdConfig[]>
@@ -121,6 +126,8 @@ end
 ---@param config CmdConfig The config that defines how to run the code.
 ---@return nil
 function M.execute(script, config)
+  if config.before then table.insert(script, 1, config.before) end
+  if config.after then table.insert(script, config.after) end
   vim.cmd.split()
   local pass_as = config.pass_as or M.PassMethod.arg
   local filename
