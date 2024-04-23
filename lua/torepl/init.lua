@@ -18,7 +18,7 @@ local utils = require("torepl.utils")
 --- interactive shell in Python via `IPython.embed()`.
 
 ---@class ToReplConfig
----@field commands table<CmdConfig | CmdConfig[]>
+---@field commands table<string, CmdConfig | CmdConfig[]>
 --- A table mapping filetype to either:
 --- - the command configuration
 --- - a table mapping a filename pattern to a command confguration.
