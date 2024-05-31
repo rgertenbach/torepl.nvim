@@ -63,7 +63,7 @@ function M.extract_setup(delim, up_to)
   end
   if delim_pos == -1 then return {} end
   for i = delim_pos, #lines do lines[i] = nil end
-  return lines
+  return linesconcat_in
 end
 
 --- Gets the first matching config for the current buffer or nil.
@@ -98,7 +98,7 @@ end
 function M.execute_selection()
   local ft_config = M.get_buffer_config()
   if not ft_config then return end
-  local selection = M.get_selected_range()
+  local selection = utils.get_selected_range()
   local script = {}
   if ft_config.delimiter then
     local setup = M.extract_setup(ft_config.delimiter, selection.first.row)
