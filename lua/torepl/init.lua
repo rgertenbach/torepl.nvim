@@ -63,7 +63,7 @@ function M.extract_setup(delim, up_to)
   end
   if delim_pos == -1 then return {} end
   for i = delim_pos, #lines do lines[i] = nil end
-  return linesconcat_in
+  return lines
 end
 
 --- Gets the first matching config for the current buffer or nil.
