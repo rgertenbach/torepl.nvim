@@ -33,7 +33,7 @@ function M.get_selected_range()
   if last.row < first.row or (last.row == first.row and last.col < first.col) then
     first, last = last, first
   end
-  return { first = first, last = last }
+  return { first = first, last = last, mode = vim.fn.mode() }
 end
 
 return M
