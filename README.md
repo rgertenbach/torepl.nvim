@@ -24,12 +24,12 @@ return {
             },
             {
               cmd = "~/py/venv/bin/python -c \"%s\"",
-              after = [[import IPython; IPython.embed()]],
+              after = [[import IPython; IPython.embed(banner1='')]],
             }
           },
           -- This is passing data instead of code into a pewritten program.
           ["csv"] = {
-            cmd = [[~/py/venv/bin/python ~/.config/nvim/lua/rgertenbach/plugins/csv_loader.py %s]],
+            cmd = [[~/py/venv/bin/python ~/src/torepl.nvim/examples/csv_loader.py %s]],
             pass_as = torepl.PassMethod.file
           },
         }
