@@ -22,7 +22,7 @@ local utils = require("torepl.utils")
 --- A table mapping filetype to either:
 --- - the command configuration
 --- - a table mapping a filename pattern to a command confguration.
-_ToReplConfig = ToReplConfig or {}
+_ToReplConfig = ToReplConfig or { commands = {} }
 
 local M = {
   config = _ToReplConfig
