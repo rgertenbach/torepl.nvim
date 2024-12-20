@@ -22,7 +22,7 @@ local utils = require("torepl.utils")
 --- A table mapping filetype to either:
 --- - the command configuration
 --- - a table mapping a filename pattern to a command confguration.
-_ToReplConfig = ToReplConfig or { commands = {} }
+_ToReplConfig = _ToReplConfig or { commands = {} }
 
 local M = {
   config = _ToReplConfig
@@ -41,7 +41,7 @@ M.PassMethod = {
 ---@return nil
 function M.setup(opt)
   opt = opt or {}
-  ToReplConfig = vim.tbl_extend("force", ToReplConfig, opt)
+  _ToReplConfig = vim.tbl_extend("force", _ToReplConfig, opt)
 end
 
 ---Extracts setup section from the current buffer.
@@ -72,7 +72,7 @@ end
 ---
 ---@return CmdConfig | nil # A CmdConfig if one matches, otherwise `nil`.
 function M.get_buffer_config()
-  local ft_config = ToReplConfig.commands[vim.bo.ft]
+  local ft_config = _ToReplConfig.commands[vim.bo.ft]
   if not ft_config then return end
   if ft_config.cmd then return ft_config end
   local filename = vim.api.nvim_buf_get_name(0)
