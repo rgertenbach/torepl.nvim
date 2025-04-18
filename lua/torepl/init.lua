@@ -58,7 +58,7 @@ function M.extract_setup(delim, up_to)
   local delim_pos = -1
   for i, line in ipairs(lines) do
     if i > up_to then break end
-    if line:find("^" .. delim) then
+    if vim.startswith(line, delim) then
       delim_pos = i
       break
     end
